@@ -14,12 +14,13 @@ import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfGState;
 import com.lowagie.text.pdf.PdfReader;
 import com.lowagie.text.pdf.PdfStamper;
+import com.lowagie.text.pdf.AcroFields;
 
-public class insertImgOnPdf {
-	insertImgOnPdf() {}
+public class editPdf {
+	editPdf() {}
 
-	public static insertImgOnPdf init() {
-    	insertImgOnPdf obj = new insertImgOnPdf();
+	public static editPdf init() {
+    	editPdf obj = new editPdf();
     	return obj;
   	}
 
@@ -28,9 +29,9 @@ public class insertImgOnPdf {
     // }
 
     public static void insertImage(String output, String input, String img_file, int position_x, int position_y, int size_x, int size_y) throws DocumentException, IOException {
-    	// 要输出的pdf文件
+    	// destination pdf
         BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(new File(output)));
-        // 将pdf文件先加水印然后输出
+        // Add wate mark and output
         setWatermark(bos, input, img_file, 16, position_x, position_y, size_x, size_y);
     }
 
@@ -55,6 +56,22 @@ public class insertImgOnPdf {
             content.setColorFill(Color.BLACK);
             content.endText();
         }
+        stamper.close();
+    }
+
+    public static void insertFormText(String src, String dest, String[] arr) throws DocumentException, IOException {
+        //Add text to form
+        BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(new File(dest)));
+        PdfReader reader = new PdfReader(src);
+        PdfStamper stamper = new PdfStamper(reader, bos);
+        AcroFields form = stamper.getAcroFields();
+
+        for (int i = 0; i < arr.length / 2; i++) {
+            String key = arr[i * 2];
+            String value = arr[i * 2 + 1];
+            form.setField(key, value);
+        }
+        stamper.setFormFlattening(true);
         stamper.close();
     }
 }
