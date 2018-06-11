@@ -71,6 +71,7 @@ public class editPdf {
             String value = arr[i * 2 + 1];
             form.setField(key, value);
         }
+        //if set "true", the form can't be edited
         stamper.setFormFlattening(true);
         stamper.close();
     }
